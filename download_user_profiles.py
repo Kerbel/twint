@@ -1,3 +1,4 @@
+import threading
 import time
 from multiprocessing import Process
 
@@ -31,8 +32,8 @@ def download_user(screen_name):
 
 user_ids_query = tweets.select(tweets.user_id, tweets.screen_name)
 for t in user_ids_query.iterator():
-    p = Process(target=download_user, args=(str(t.screen_name),))
-    p.start()
+    x = threading.Thread(target=download_user, args=(str(t.screen_name),))
+    x.start()
     time.sleep(0.1)
 
 
