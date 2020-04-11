@@ -1,5 +1,7 @@
 from datetime import datetime
+from threading import Thread
 
+import twint
 from . import format, get
 from .tweet import Tweet
 from .user import User
@@ -118,6 +120,12 @@ async def checkData(tweet, config, conn):
                 logme.debug(__name__+':checkData:Database')
                 db.tweets(conn, tweet, config)
 
+                c = twint.Config()
+                c.Username = tweet.username
+                c.Database = 'april_users.db'
+                thread = Thread(target=twint.run.Lookup, args=(c,))
+                thread.start()
+
             if config.Pandas:
                 logme.debug(__name__+':checkData:Pandas')
                 panda.update(tweet, config)
@@ -181,12 +189,6 @@ async def Users(u, config, conn):
                 config.Store_object_follow_list.append(user)
             else:
                 users_list.append(user) # twint.user.user
-
-        # also populate using the previous method to avoid breaking changes
-        if hasattr(config.Store_object_users_list, 'append'):
-            config.Store_object_users_list.append(user)
-        else:
-            users_list.append(user) # twint.user.user
 
     if config.Pandas:
         logme.debug(__name__+':User:Pandas+user')
