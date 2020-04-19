@@ -1,0 +1,15 @@
+version: '3.7'
+
+
+services:
+  postgres:
+    image: 'postgres:11.6'
+    container_name: tweets_postgres
+    volumes:
+      - './pg/local/data/postgres/data:/var/lib/postgres'
+      - './pg/local/data/postgresql/data:/var/lib/postgresql/data'
+    ports:
+      - '5434:5432'
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
